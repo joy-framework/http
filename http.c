@@ -88,7 +88,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
      method = (char *)janet_unwrap_string(janet_method);
   }
 
-  JanetTable *response_table = janet_table(2);
+  JanetTable *response_table = NULL;
 
   if(curl) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -134,8 +134,10 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     /* Check for errors */
     if(res != CURLE_OK) {
+      response_table = janet_table(1);
       janet_table_put(response_table, janet_ckeywordv("error"), janet_wrap_string(curl_easy_strerror(res)));
     } else {
+      response_table = janet_table(3);
       janet_table_put(response_table, janet_ckeywordv("status"), janet_wrap_integer(response_code));
       janet_table_put(response_table, janet_ckeywordv("body"), janet_wrap_string(janet_string((const uint8_t *)body.memory, body.size)));
       janet_table_put(response_table, janet_ckeywordv("headers"), janet_wrap_string(janet_string((const uint8_t *)headers.memory, headers.size)));
