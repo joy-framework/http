@@ -11,8 +11,14 @@
          (freeze))))
 
 
+(defn prep-headers [headers]
+  (when headers
+    (map |(string/format "%s: %s" (first $) (last $)) (pairs headers))))
+
+
 (defn request [method url options]
   (let [options (merge options {:method method})
+        options (update options :headers prep-headers)
         response (send-request url options)
         headers (parse-headers response)]
     (merge response {:headers headers})))

@@ -1,8 +1,15 @@
 (import tester :prefix "" :exit true)
 (import build/http :as http)
 
-
 (deftest
+  (test "prep-headers"
+    (deep= @["accept: application/json"] (http/prep-headers {"accept" "application/json"})))
+
+  (test "request headers"
+    (string/find "text/plain"
+       (-> (http/get "https://postman-echo.com/get" :headers {"Accept" "text/plain"})
+           (get :body))))
+
   (test "get"
     (= 200
        (-> (http/get "http://example.com")
