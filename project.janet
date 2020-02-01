@@ -3,6 +3,7 @@
   :description "A janet http client library"
   :author "Sean Walker"
   :license "MIT"
+  :dependencies ["https://github.com/joy-framework/tester"]
   :url "https://github.com/joy-framework/http"
   :repo "git+https://github.com/joy-framework/http")
 
