@@ -88,7 +88,15 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
      method = (char *)janet_unwrap_string(janet_method);
   }
 
+  Janet janet_headers = janet_table_get(options, janet_ckeywordv("headers"));
+  JanetArray *request_headers = NULL;
+
+  if(janet_checktype(janet_headers, JANET_ARRAY)) {
+     request_headers = janet_unwrap_array(janet_headers);
+  }
+
   JanetTable *response_table = NULL;
+  struct curl_slist *curl_slist = NULL;
 
   if(curl) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -112,6 +120,16 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     // tcp keep alive
     curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, keep_alive);
+
+    // request headers
+    if(request_headers != NULL) {
+      for(int32_t i = 0; i < request_headers->count; i++) {
+        Janet header_string = janet_array_pop(request_headers);
+        curl_slist = curl_slist_append(curl_slist, (char *)janet_unwrap_string(header_string));
+      }
+
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, curl_slist);
+    }
 
     // request body
     if(request_body) {
@@ -145,6 +163,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     /* cleanup */
     curl_easy_cleanup(curl);
+    curl_slist_free_all(curl_slist);
     curl_global_cleanup();
     free(body.memory);
     free(headers.memory);
