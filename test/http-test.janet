@@ -11,8 +11,8 @@
     (let [headers {"Accept" "text/plain" "Content-Type" "text/plain"}
           res (-> (http/get "https://postman-echo.com/get" :headers headers)
                   (get :body))]
-    (string/find `accept:text/plain` res)
-    (string/find `content-type:text/plain` res)))
+      (string/find `accept:text/plain` res)
+      (string/find `content-type:text/plain` res)))
 
   (test "get"
     (= 200

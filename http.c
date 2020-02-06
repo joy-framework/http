@@ -123,7 +123,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     // request headers
     if(request_headers != NULL) {
-      for(int32_t i = 0; i < request_headers->count; i++) {
+      while(request_headers->count > 0) {
         Janet header_string = janet_array_pop(request_headers);
         curl_slist = curl_slist_append(curl_slist, (char *)janet_unwrap_string(header_string));
       }
