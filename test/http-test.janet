@@ -6,9 +6,11 @@
     (deep= @["accept: application/json"] (http/prep-headers {"accept" "application/json"})))
 
   (test "request headers"
-    (string/find "text/plain"
-       (-> (http/get "https://postman-echo.com/get" :headers {"Accept" "text/plain"})
-           (get :body))))
+    (let [headers {"Accept" "text/plain" "Content-Type" "text/plain"}
+          res (-> (http/get "https://postman-echo.com/get" :headers headers)
+                  (get :body))]
+      (string/find `accept:text/plain` res)
+      (string/find `content-type:text/plain` res)))
 
   (test "get"
     (= 200

@@ -123,7 +123,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     // request headers
     if(request_headers != NULL) {
-      for(int32_t i = 0; i < request_headers->count; i++) {
+      while(request_headers->count > 0) {
         Janet header_string = janet_array_pop(request_headers);
         curl_slist = curl_slist_append(curl_slist, (char *)janet_unwrap_string(header_string));
       }
@@ -153,7 +153,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
     /* Check for errors */
     if(res != CURLE_OK) {
       response_table = janet_table(1);
-      janet_table_put(response_table, janet_ckeywordv("error"), janet_wrap_string(curl_easy_strerror(res)));
+      janet_table_put(response_table, janet_ckeywordv("error"), janet_cstringv(curl_easy_strerror(res)));
     } else {
       response_table = janet_table(3);
       janet_table_put(response_table, janet_ckeywordv("status"), janet_wrap_integer(response_code));
