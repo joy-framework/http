@@ -3,9 +3,7 @@
 
 (deftest
   (test "prep-headers"
-    (deep= @["accept: application/json" "content-type: application/json"]
-           (http/prep-headers {"accept" "application/json"
-                               "content-type" "application/json"})))
+    (deep= @["accept: application/json"] (http/prep-headers {"accept" "application/json"})))
 
   (test "request headers"
     (let [headers {"Accept" "text/plain" "Content-Type" "text/plain"}
