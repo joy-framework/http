@@ -153,7 +153,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
     /* Check for errors */
     if(res != CURLE_OK) {
       response_table = janet_table(1);
-      janet_table_put(response_table, janet_ckeywordv("error"), janet_wrap_string(curl_easy_strerror(res)));
+      janet_table_put(response_table, janet_ckeywordv("error"), janet_cstringv(curl_easy_strerror(res)));
     } else {
       response_table = janet_table(3);
       janet_table_put(response_table, janet_ckeywordv("status"), janet_wrap_integer(response_code));
