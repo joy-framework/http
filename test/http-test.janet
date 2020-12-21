@@ -1,16 +1,19 @@
 (import tester :prefix "" :exit true)
 (import build/http :as http)
 
-(deftest
+(deftests
   (test "prep-headers"
-    (deep= @["accept: application/json"] (http/prep-headers {"accept" "application/json"})))
+    (is (deep= @["accept: application/json"] (http/prep-headers {"accept" "application/json"}))))
 
   (test "request headers"
     (let [headers {"Accept" "text/plain" "Content-Type" "text/plain"}
           res (-> (http/get "https://postman-echo.com/get" :headers headers)
                   (get :body))]
-      (string/find `accept:text/plain` res)
-      (string/find `content-type:text/plain` res)))
+      (is (not (nil? (string/find `"accept":"text/plain"` res))))))
+
+  (test "parse-headers can multi value headers"
+    (is (= {"Set-Cookie" ["one" "two"] "Content-Type" "application/json"}
+           (http/parse-headers {:headers "Set-Cookie: one\r\nSet-Cookie: two\r\nContent-Type: application/json\r\n"}))))
 
   (test "get"
     (= 200

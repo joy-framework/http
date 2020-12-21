@@ -1,13 +1,25 @@
 # http_lib.janet
 
 
+(defn merged-table [arr]
+  (var output @{})
+
+  (let [parts (partition 2 arr)]
+    (each [k v] parts
+      (if (get output k)
+        (put output k (array/concat @[(get output k)] @[v]))
+        (put output k v))))
+
+  output)
+
+
 (defn parse-headers [response]
   (let [str (get response :headers)]
     (->> (string/split "\r\n" str)
          (filter |(string/find ":" $))
          (mapcat |(string/split ":" $ 0 2))
          (map string/trim)
-         (apply table)
+         (merged-table)
          (freeze))))
 
 
