@@ -74,6 +74,20 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
      keep_alive = janet_unwrap_boolean(janet_keep_alive);
   }
 
+  Janet janet_username = janet_table_get(options, janet_ckeywordv("username"));
+  char *username;
+
+  if(janet_checktype(janet_username, JANET_STRING)) {
+     username = (char *)janet_unwrap_string(janet_username);
+  }
+
+  Janet janet_password = janet_table_get(options, janet_ckeywordv("password"));
+  char *password;
+
+  if(janet_checktype(janet_password, JANET_STRING)) {
+     password = (char *)janet_unwrap_string(janet_password);
+  }
+
   Janet janet_request_body = janet_table_get(options, janet_ckeywordv("body"));
   char *request_body = NULL;
 
@@ -120,6 +134,14 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
     // tcp keep alive
     curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, keep_alive);
+
+    if(username != NULL) {
+      curl_easy_setopt(curl, CURLOPT_USERNAME, username);
+    }
+
+    if(password != NULL) {
+      curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
+    }
 
     // request headers
     if(request_headers != NULL) {
