@@ -36,6 +36,22 @@
     (merge response {:headers headers})))
 
 
+(defn form-encode [dict]
+  (if (not (dictionary? dict))
+    ""
+    (do
+      (var output @"")
+      (var i 0)
+      (def len (length dict))
+
+      (eachp [k v] dict
+        (buffer/push-string output (string k "=" v))
+        (when (< (++ i) len)
+          (buffer/push-string output "&")))
+
+      (string output))))
+
+
 (defn get
   "Sends a get request with libcurl"
   [url & options]
