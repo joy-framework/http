@@ -75,14 +75,14 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
   }
 
   Janet janet_username = janet_table_get(options, janet_ckeywordv("username"));
-  char *username;
+  char *username = NULL;
 
   if(janet_checktype(janet_username, JANET_STRING)) {
      username = (char *)janet_unwrap_string(janet_username);
   }
 
   Janet janet_password = janet_table_get(options, janet_ckeywordv("password"));
-  char *password;
+  char *password = NULL;
 
   if(janet_checktype(janet_password, JANET_STRING)) {
      password = (char *)janet_unwrap_string(janet_password);
