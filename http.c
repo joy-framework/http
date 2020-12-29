@@ -95,6 +95,10 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
      request_body = (char *)janet_unwrap_string(janet_request_body);
   }
 
+  if(janet_checktype(janet_request_body, JANET_BUFFER)) {
+     request_body = (char *)janet_unwrap_buffer(janet_request_body)->data;
+  }
+
   Janet janet_method = janet_table_get(options, janet_ckeywordv("method"));
   char *method = NULL;
 
