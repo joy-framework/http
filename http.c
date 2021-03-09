@@ -169,7 +169,14 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
     // response headers
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, curl_callback);
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void *)&headers);
-
+	  
+    // set SSL behavior options
+    //
+    // Tell libcurl to use the operating system's native CA store for certificate verification. 
+    // Works only on Windows when built to use OpenSSL. 
+    // This option is experimental and behavior is subject to change. (Added in 7.71.0) 
+    curl_easy_setopt(curl, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
+  
     // send request
     res = curl_easy_perform(curl);
 
@@ -186,7 +193,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
       janet_table_put(response_table, janet_ckeywordv("body"), janet_wrap_string(janet_string((const uint8_t *)body.memory, body.size)));
       janet_table_put(response_table, janet_ckeywordv("headers"), janet_wrap_string(janet_string((const uint8_t *)headers.memory, headers.size)));
     }
-
+    
     /* cleanup */
     curl_easy_cleanup(curl);
     curl_slist_free_all(curl_slist);

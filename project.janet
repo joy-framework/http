@@ -11,12 +11,12 @@
   :x64 { 
     :download-url "https://curl.se/windows/dl-7.75.0_4/curl-7.75.0_4-win64-mingw.zip"
     :lib-path     "./curl/curl-7.75.0-win64-mingw/lib/"
-    :bin-files    "./curl/curl-7.75.0-win64-mingw/bin/libcurl-x64*"
+    :bin-path     "./curl/curl-7.75.0-win64-mingw/bin/"
     :include-path "./curl/curl-7.75.0-win64-mingw/include/" }
   :x86 {
     :download-url "https://curl.se/windows/dl-7.75.0_4/curl-7.75.0_4-win32-mingw.zip"
     :lib-path     "./curl/curl-7.75.0-win32-mingw/lib/"
-    :bin-files    "./curl/curl-7.75.0-win32-mingw/bin/libcurl*"
+    :bin-path     "./curl/curl-7.75.0-win32-mingw/bin/"
     :include-path "./curl/curl-7.75.0-win32-mingw/include/" }
   })
 
@@ -56,7 +56,7 @@
     "Expand-Archive -Force -Path curl.zip -DestinationPath curl"] :p))
 
 (defn windows-install-curl-dlls []
-  (def dll-files (string/replace-all "/" "\\" (curl-paths :bin-files)))
+  (def dll-files (string/replace-all "/" "\\" (curl-paths :bin-path "libcurl-x64*")))
   (print "copy " dll-files " to " JANET_BINPATH)
   (os/execute 
     ["cmd.exe" "/c" "copy" dll-files JANET_BINPATH] :p))
