@@ -90,13 +90,17 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
   Janet janet_request_body = janet_table_get(options, janet_ckeywordv("body"));
   char *request_body = NULL;
+  long request_body_size = 0;
 
   if(janet_checktype(janet_request_body, JANET_STRING)) {
      request_body = (char *)janet_unwrap_string(janet_request_body);
+     request_body_size = janet_string_length(request_body);
   }
 
   if(janet_checktype(janet_request_body, JANET_BUFFER)) {
-     request_body = (char *)janet_unwrap_buffer(janet_request_body)->data;
+     JanetBuffer *buffer = janet_unwrap_buffer(janet_request_body);
+     request_body = (char *)buffer->data;
+     request_body_size = buffer->count;
   }
 
   Janet janet_method = janet_table_get(options, janet_ckeywordv("method"));
@@ -160,6 +164,7 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
     // request body
     if(request_body) {
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request_body);
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, request_body_size);
     }
 
     // response body
