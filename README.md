@@ -10,6 +10,14 @@ Add to your `project.janet` file
 {:dependencies ["https://github.com/joy-framework/http"]}
 ```
 
+### Linux Dependencies
+
+On Debian and Debian-like Linux distros, such as Ubuntu, you need `libcurl4-openssl-dev` --
+
+```bash
+sudo apt install libcurl4-openssl-dev
+```
+
 ## Use
 
 ```clojure
