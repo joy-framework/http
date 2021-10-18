@@ -14,7 +14,7 @@
 
 
 (defn parse-headers [response]
-  (let [str (get response :headers)]
+  (let [str (get response :headers "")]
     (->> (string/split "\r\n" str)
          (filter |(string/find ":" $))
          (mapcat |(string/split ":" $ 0 2))
@@ -33,6 +33,8 @@
         options (update options :headers prep-headers)
         response (send-request url options)
         headers (parse-headers response)]
+    (if-let [error-msg (response :error)]
+      (errorf "%s" error-msg))
     (merge response {:headers headers})))
 
 
