@@ -18,6 +18,12 @@ On Debian and Debian-like Linux distros, such as Ubuntu, you need `libcurl4-open
 sudo apt install libcurl4-openssl-dev
 ```
 
+On Fedora, CentOS, and RHEL-like distros, you need `libcurl-devel` --
+
+```bash
+sudo dnf install libcurl-devel
+```
+
 ## Use
 
 ```clojure
