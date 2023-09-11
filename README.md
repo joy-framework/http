@@ -56,3 +56,9 @@ send custom http methods too!
 ```clojure
 (http/delete "example.com/accounts/1")
 ```
+
+Specify a port:
+
+```clojure
+(http/get "example.com:9001", ...)
+```
