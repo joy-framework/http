@@ -43,12 +43,6 @@ Send get requests!
 (http/post "example.com" "param1=value1&param2=value2")
 ```
 
-specify the request port!
-
-```clojure
-(http/get "localhost" "param1=value1&param2=value2" :port 8080)
-```
-
 follow redirects!
 
 ```clojure

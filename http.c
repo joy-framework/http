@@ -46,13 +46,6 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
   const uint8_t *url = janet_getstring(argv, 0);
   JanetTable *options = janet_gettable(argv, 1);
 
-  Janet janet_port = janet_table_get(options, janet_ckeywordv("port"));
-  long port = 80;
-
-  if (janet_checktype(janet_port, JANET_NUMBER)) {
-    port = (long)janet_unwrap_integer(janet_port);
-  }
-
   Janet janet_follow_redirects = janet_table_get(options, janet_ckeywordv("follow-redirects"));
   int follow_redirects = 0;
 
@@ -129,9 +122,6 @@ static Janet c_send_request(int32_t argc, Janet *argv) {
 
   if(curl) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
-
-    // set port
-    curl_easy_setopt(curl, CURLOPT_PORT, port);
 
     // set http method
     if(method) {
